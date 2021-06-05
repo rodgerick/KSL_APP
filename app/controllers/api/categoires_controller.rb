@@ -1,27 +1,20 @@
 class Api::CategoiresController < ApplicationController 
 
-  before_action :set_category, only: %i[show edit update destroy]
+  before_action :set_category, only: [:show, :update, :destroy]
 
   def index
-    @categories = Category.all
+    render json: Category.all
   end
 
   def show
-    @category = Category.find(params[:id])
-  end
-
-  def new
-    @category = Category.new
-  end
-
-  def edit
-    @category = Category.find(params[:id])
+    render json: @category.to_json(include: [:itmes, :jobs])
   end
 
   def create
-    @category = Category.new(category_params)
+    category = Category.new(category_params)
     resopond_to do |format|
-      if @category.save
+      if category.save
+        render json: category
         format.html { redirect_to @category, notice: "Category was successfully created!" }
         format.json { render :show, status: :created. location: @category }
       else
@@ -31,9 +24,14 @@ class Api::CategoiresController < ApplicationController
     end
   end
 
+  # def edit
+  #     @category = Category.find(params[:id])
+  # end
+
   def update
     resopond_to do |format|
       if @category.update(category_params)
+        render json: @category
         format.html { redirect_to @category, notice: "Category was successfully updated!" }
         format.json { render :show, status: :ok, location: @category }
       else
@@ -52,6 +50,7 @@ class Api::CategoiresController < ApplicationController
   end
   
   private
+
   def set_category
     @category = Category.find(params[:id])
   end

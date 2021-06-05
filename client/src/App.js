@@ -1,22 +1,27 @@
-import { Switch, Route } from "react-router-dom";
-import Navbar from './components/NavBar';
-import About from "./pages/About";
-import Category from "./pages/Category";
-import Job from "./pages/Job";
+import React from 'react';
+import { Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
-import Things from "./pages/Things";
+import Navbar from './components/NavBar';
+import Category from "./pages/Category";
+import About from "./pages/About";
+import Jobs from "./pages/Job";
+import Item from "./components/Item";
+
+import {Container} from 'semantic-ui-react';
 
 function App() {
   return (
     <>
     <Navbar />
-    <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/category" component={Category} />
-        <Route exact path="/job" component={Job} />
-        <Route exact path="/about" component={About} />
-        <Route exact path="/things" component={Things} />
-      </Switch>
+     <Container>
+       <Switch>
+         <Route exact path='/' component={Home} />
+         <Route exact path='/categories' component={Category} />
+         <Route exact path='/items' component={Item} />
+         <Route exact path='/jobs/:id' component={Jobs} />
+         <Route exact path='/about' component={About} />
+        </Switch>
+     </Container>
     </>
   );
 }

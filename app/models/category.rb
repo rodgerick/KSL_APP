@@ -1,8 +1,8 @@
 class Category < ApplicationRecord
-  has_many :items
-  has_many :jobs
+  has_many :items, dependent: :destroy
+  has_many :jobs, dependent: :destroy
 
   validates :name, presence: true
-  validates :linstings, presence: true
+  validates :listings, presence: true
   validates :price, presence: true
 end 
