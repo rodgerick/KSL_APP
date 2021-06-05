@@ -10,10 +10,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_02_163113) do
+ActiveRecord::Schema.define(version: 2021_06_05_161420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.string "listings"
+    t.float "price"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.float "price"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_items_on_category_id"
+  end
+
+  create_table "jobs", force: :cascade do |t|
+    t.string "title"
+    t.string "company"
+    t.integer "salary"
+    t.bigint "category_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["category_id"], name: "index_jobs_on_category_id"
+  end
 
   create_table "things", force: :cascade do |t|
     t.string "name"
@@ -21,4 +49,6 @@ ActiveRecord::Schema.define(version: 2021_06_02_163113) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "items", "categories"
+  add_foreign_key "jobs", "categories"
 end
