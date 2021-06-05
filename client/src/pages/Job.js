@@ -1,11 +1,23 @@
-import React, {useState, useEffect} from 'react'
+import { Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-const Job= () => {
-    return (
-        <div>
-            <h1>Job</h1>
-        </div>
-    )
-} 
+const Job = ({ title, company, salary, categoryId }) => {
+  return (
+    <div>
+      {title}
+      <p>${company}</p>
+      <p>${salary}</p>
+      <Button
+        as={Link}
+        to={{
+          pathname: `/categories/${categoryId}/items/edit`,
+          state: { title, salary },
+        }}
+      >
+        edit
+      </Button>
+    </div>
+  );
+};
 
-export default Job
+export default Job;

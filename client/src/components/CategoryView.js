@@ -1,57 +1,59 @@
-import Axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Button, Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Item from "./Item";
-import ItemForm from "./ItemForm";
+import React, { useState, useEffect } from "react";
+import CategoryForm from "./CategoryForm";
+import axios from "axios";
+import { Button } from "react-bootstrap";
 
-const CategoryView = ({ history, match }) => {
+const CategoryView = (props) => {
   const [category, setCategory] = useState({});
-  const [items, setItem] = useState([]);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
-    Axios.get(`/api/categories/${match.params.id}`)
-      .then((res) => {
-        setCategory(res.data);
-      })
-      .catch((err) => {
-        alert("Error: No categories loaded");
-      });
-
-    Axios.get(`/api/categories/${match.params.id}/items`)
-      .then((res) => {
-        setItem(res.data);
-      })
-      .catch((err) => {
-        alert("Error: Could not retrieve items");
-      });
+    axios.get("/api/categories/${props.match.params.id}").then((res) => {
+      setCategory(res.data);
+    });
   }, []);
 
-  function renderItems() {
-    if (!category.items) {
-      return;
-    }
-    if (category.items.length === 0) {
-      return <p>No Inventory</p>;
-    }
-    return category.items.map((r) => {
-      return <Item key={r.id} {...r} categoryId={category.id} />;
-    });
-  }
+  const deleteCategory = () => {
+    axios
+      .delete("/api/categories/${props.match.params.id}")
+      .then(props.history.push("/"));
+  };
 
+  const editCategory = (id, genre) => {
+    axios.put("/api/categories${id}", category).then((res) => {
+      setCategory(res.data);
+      return category;
+    });
+  };
   return (
-    <div>
-      <Card.Header as="h1">{category.name}</Card.Header>
-      <Button as={Link} to={`/categories/${category.id}/new`}>
-        New Item
+    <>
+      {editing ? (
+        <CategoryForm
+          toggleEdit={setEditing}
+          editCategory={editCategory}
+          category={category}
+        />
+      ) : (
+        <h1 align="center">{category.name}</h1>
+      )}
+      <hr />
+      <Button
+        variant="outline-danger"
+        type="button"
+        onClick={() => deleteCategory(props.match.params.id)}
+      >
+        Delete
       </Button>
-      <Card>{renderItems()}</Card>
-      <Button variant="dark" onClick={history.goBack}>
-        Back
+
+      <Button
+        variant="outline-success"
+        type="button"
+        onClick={() => setEditing(!editing)}
+      >
+        Edit
       </Button>
-    </div>
+    </>
   );
 };
 
 export default CategoryView;
-
